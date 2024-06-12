@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\StarshipRepository;
@@ -9,13 +11,17 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class StarshipController extends AbstractController
 {
-    #[Route('/api/v1/starships')]
-    public function getCollection(StarshipRepository $starshipRepository): Response
+    #[Route('/starships/{id<\d+>}', name: 'app_starship_show')]
+    public function show(int $id, StarshipRepository $starshipRepository): Response
     {
-        // dd($logger);
-        // dd($starshipRepository);
-        $starships = $starshipRepository->findAll();
+        $ship = $starshipRepository->find($id);
 
-        return $this->json($starships);
+        if (!$ship) {
+            throw $this->createNotFoundException('Starship not found.');
+        }
+
+        return $this->render('starship/show.html.twig', [
+            'ship' => $ship,
+        ]);
     }
 }
