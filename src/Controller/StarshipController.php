@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Model\Starship;
+use App\Repository\StarshipRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -10,31 +10,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class StarshipController extends AbstractController
 {
     #[Route('/api/v1/starships')]
-    public function getCollection(): Response
+    public function getCollection(StarshipRepository $starshipRepository): Response
     {
-        $starships = [
-            new Starship(
-                1,
-                'USS LeafyCruiser (NCC-0001)',
-                'Garden',
-                'Jean-Luc Pickles',
-                'taken over by Q',
-            ),
-            new Starship(
-                2,
-                'USS Espresso (NCC-1234-C)',
-                'Latte',
-                'James T. Quick',
-                'repaired',
-            ),
-            new Starship(
-                3,
-                'USS Wanderlust (NCC-2024-W)',
-                'Delta Tourist',
-                'Kathryn Journey',
-                'under construction',
-            ),
-        ];
+        // dd($logger);
+        // dd($starshipRepository);
+        $starships = $starshipRepository->findAll();
 
         return $this->json($starships);
     }
